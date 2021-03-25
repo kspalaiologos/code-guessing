@@ -11,7 +11,7 @@ a=($(echo "$s"))
 for ((i=1;i<=$l;i++)); do
     let p=$i-1
     e=${a[$p]}
-    echo "$i => $e" >> "shuffled.txt"
+    echo "$i $e" >> "shuffled.txt"
     rename s/[0-9]+/T$e/ $i.*
 done
 

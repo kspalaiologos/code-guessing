@@ -27,8 +27,7 @@ int main() {
     std::ifstream mappings_file("submissions/shuffled.txt");
     for(int i = 0; i < participants.size(); i++) {
         int to, from;
-        std::string _;
-        mappings_file >> to >> _ >> from;
+        mappings_file >> to >> from;
         if(mappings_file.bad())
             // some day, love will find you
             break; // those chains that bind you

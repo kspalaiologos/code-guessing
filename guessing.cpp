@@ -1,79 +1,3 @@
-
-/*
- The guessing phase. Take shuffle mappings from submissions/shuffled.txt
- Take the pre-shuffled answers from submissions/answers.txt
- Take the list of participants from submissions/participants.txt
-
- The program asks the operator about person's guesses. The guesses are evaluated
- and the final standings are displayed.
-*/
-
-/*
-Example data
-
-Participants:
-LyricLy
-Palaiologos
-Gibson
-Gollark
-
-Shuffled:
-1 => 1
-2 => 3
-3 => 2
-4 => 4
-
-Answers:
-LyricLy 1.py  (1)
-Gibson 3.c  (2)
-Palaiologos 2.c  (3)
-Gollark 4.py  (4)
-
-LyricLy's guesses:
-#1: LyricLy == 1
-#2: Gibson == 1
-#3: Gollark == 0
-#4: Palaiologos == 0
-
-Palaiologos' guesses:
-#1: Gibson == 0
-#2: Palaiologos == 0
-#3: Gollark == 0
-#4: LyricLy == 0
-
-Gibson's guesses:
-#1: Gibson == 0
-#2: Gollark == 0
-#3: LyricLy == 0
-#4: Palaiologos == 0
-
-Gollark's guesses:
-#1: LyricLy == 1
-#2: Palaiologos == 0
-#3: Gibson == 0
-#4: Gollark == 1
-
-
-LyricLy
-Gibson
-Gollark
-Palaiologos
-Gibson
-Palaiologos
-Gollark
-LyricLy
-Gibson
-Gollark
-LyricLy
-Palaiologos
-LyricLy
-Palaiologos
-Gibson
-Gollark
-
-
-*/
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -87,7 +11,6 @@ int get_participant(const std::vector<std::string> & table, const std::string & 
 }
 
 int main() {
-    /* Read the vector of participants. */
     std::vector<std::string> participants;
     std::ifstream participants_file("submissions/participants.txt");
     while(!participants_file.eof() && participants_file.good()) {
@@ -100,7 +23,6 @@ int main() {
     }
     participants_file.close();
 
-    /* Read the mappings */
     std::vector<int> mappings(participants.size());
     std::ifstream mappings_file("submissions/shuffled.txt");
     for(int i = 0; i < participants.size(); i++) {
@@ -115,7 +37,6 @@ int main() {
     }
     mappings_file.close();
 
-    /* Read the correct answers. */
     std::vector<std::string> answers(participants.size());
     std::ifstream answers_file("submissions/answers.txt");
     for(int i = 0; i < participants.size(); i++) {
@@ -128,7 +49,6 @@ int main() {
     }
     answers_file.close();
 
-    /* Query for participant's answers. */
     std::vector<std::vector<std::string>> guesses;
     for(const auto & participant : participants) {
         std::cerr << participant << "'s guesses:" << std::endl;
@@ -140,7 +60,6 @@ int main() {
         guesses.push_back(guess);
     }
 
-    /* We have all the information required to process guesses. */
     std::vector<std::vector<bool>> is_valid;
     for(const auto & persons_guess : guesses) {
         std::vector<bool> personal_valid(persons_guess.size());
@@ -153,11 +72,9 @@ int main() {
         is_valid.push_back(personal_valid);
     }
 
-    /* Fix up self-guesses */
     for(int i = 0; i < participants.size(); i++)
         is_valid[i][i] = false;
     
-    /* Calculate scores for each player. */
     std::vector<int> scores;
     for(const auto & v : is_valid) {
         int total = 0;
@@ -166,18 +83,15 @@ int main() {
         scores.push_back(total);
     }
 
-    /* Display the final standings. */
     for(int i = 0; i < participants.size(); i++)
         std::cerr << participants[i] << ": " << scores[i] << std::endl;
     std::cerr << std::endl;
 
-    /* Subtract points for being guessed. */
     for(int j = 0; j < guesses.size(); j++)
         for(int i = 0; i < guesses[j].size(); i++)
             if(guesses[j][i] == answers[i] && i != j)
                 scores[get_participant(participants, answers[i])]--;
 
-    /* Display the final standings. */
     for(int i = 0; i < participants.size(); i++)
         std::cout << participants[i] << ": " << scores[i] << std::endl;
 }

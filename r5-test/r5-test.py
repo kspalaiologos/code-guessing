@@ -8,7 +8,7 @@ def valid(s, c, n):
 s = list(random.choices(string.ascii_uppercase + string.digits, k=2048))
 c = random.choice(string.ascii_uppercase + string.ascii_lowercase)
 off = random.randint(0, 2046)
-ret = random.randint(0, 10)
+ret = random.randint(1, 10)
 
 for i in range(ret):
     s[i + off] = c
